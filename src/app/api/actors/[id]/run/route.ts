@@ -3,7 +3,7 @@ import { ApifyClient } from 'apify-client'
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params
+    const { id } = params
     const { apiKey, inputs } = await req.json()
 
     if (!apiKey || !inputs) {
