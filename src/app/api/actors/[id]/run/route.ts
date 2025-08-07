@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ApifyClient } from 'apify-client'
 
-export async function POST(request: NextRequest, context: { params: { id: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = context.params
+    const { id } = params
     const { apiKey, inputs } = await request.json()
 
     if (!apiKey || !id || !inputs) {
