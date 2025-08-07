@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ApifyClient } from 'apify-client'
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params
+    const { id } = await params // In Next.js 15, params is a Promise
     const { apiKey, inputs } = await req.json()
 
     if (!apiKey || !inputs) {
