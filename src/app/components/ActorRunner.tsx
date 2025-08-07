@@ -11,8 +11,7 @@ interface ActorRunnerProps {
 
 export default function ActorRunner({ actor, apiKey, onBack }: ActorRunnerProps) {
   const [url, setUrl] = useState('')
-  const [result, setResult] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
+const [result, setResult] = useState<Record<string, any> | null>(null)
   const [error, setError] = useState('')
   const [runLoading, setRunLoading] = useState(false)
 
