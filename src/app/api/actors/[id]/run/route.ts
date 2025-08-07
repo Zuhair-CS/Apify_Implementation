@@ -1,26 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ApifyClient } from 'apify-client'
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, context: { params: { id: string } }) {
   try {
-    const body = await req.json()
-    const { apiKey, inputs } = body
-    const {id} = await params;
-    const actorId = id;
+    const { id } = context.params
+    const { apiKey, inputs } = await request.json()
 
-    if (!apiKey || !actorId || !inputs) {
-      return NextResponse.json({ error: 'Missing apiKey, actorId, or inputs' }, { status: 400 })
+    if (!apiKey || !id || !inputs) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     const client = new ApifyClient({ token: apiKey })
 
-    // Run the actor
-    const run = await client.actor(actorId).call(inputs)
+    const run = await client.actor(id).call(inputs)
 
-    // Fetch the results from the dataset
-    const { items } = await client.dataset(run.defaultDatasetId).listItems()
+    const { items: datasetItems } = await client.dataset(run.defaultDatasetId!).listItems()
 
-    return NextResponse.json({ result: items }, { status: 200 })
+    return NextResponse.json({ result: datasetItems })
   } catch (error) {
     console.error('Error running actor:', error)
     return NextResponse.json({ error: 'Failed to run actor' }, { status: 500 })
