@@ -1,13 +1,9 @@
-// src/app/api/actors/[id]/run/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { ApifyClient } from 'apify-client'
 
-export async function POST(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
-  const { id } = context.params;
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const { id } = await params
     const { apiKey, inputs } = await req.json()
 
     if (!apiKey || !inputs) {
@@ -19,8 +15,8 @@ export async function POST(
     const { items } = await client.dataset(run.defaultDatasetId!).listItems()
 
     return NextResponse.json({ result: items })
-  } catch (err) {
-    console.error('Actor run failed:', err)
-    return NextResponse.json({ error: 'Actor run failed' }, { status: 500 })
+  } catch (error) {
+    console.error('Error running actor:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
