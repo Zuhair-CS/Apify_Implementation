@@ -3,7 +3,12 @@ import { ApifyClient } from 'apify-client'
 
 export async function POST(req: NextRequest) {
   try {
-    const id  =  req.nextUrl.searchParams.get('id')|| ""
+    const id = req.nextUrl.searchParams.get('id')?.trim()
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing or invalid actor ID' }, { status: 400 })
+    }
+
     const { apiKey, inputs } = await req.json()
 
     if (!apiKey || !inputs) {

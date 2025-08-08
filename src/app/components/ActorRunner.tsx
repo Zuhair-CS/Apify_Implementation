@@ -26,15 +26,19 @@ const [result, setResult] = useState<Record<string, unknown> | null>(null)
     setResult(null)
 
     try {
-      const inputs = {
-        startUrls: [{ url }]
-      }
-
-      const response = await fetch(`/api/actors/${actor.id}/run`, {
+    const response = await fetch(`/api/actors/run?id=${actor.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey, inputs })
-      })
+        body: JSON.stringify({
+          apiKey: apiKey,
+          inputs: {
+            startUrls: [
+              { url: 'https://example.com/' }
+            ]
+          }
+        })
+      });
+
 
       if (!response.ok) {
         throw new Error('Failed to run actor')
